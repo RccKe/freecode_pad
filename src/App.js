@@ -1,45 +1,55 @@
+import { useEffect, useState } from "react";
 
 const App = () => {
 
-  const playAudio = (audioId) => {
+  const [ Text, setText] = useState(" ")
+  const [keyDown, setKeyDown] = useState()
+
+  const playAudio = (audioId, text) => {
     const newAudio = document.getElementById(audioId)
     if (newAudio) {
       newAudio.currentTime = 0;
       newAudio.play();
-      setDisplay(audioId);
     }
+     setText(text);
   }
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      const newArr = event.key.toUpperCase();
+      const audioItem = userAudio.find((item) => item.id === newArr);
+      if (audioItem) {
+        playAudio(audioItem.id, audioItem.text);
+        setKeyDown(audioItem.id);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  const userAudio = [
+    { id: "Q", src: "https://taira-komori.jpn.org/sound_os2/playing01/pianoC.mp3" ,text: "pianoC"},
+    { id: "W", src: "https://taira-komori.jpn.org/sound_os2/playing01/pianoD.mp3" ,text: "pianoD"},
+    { id: "E", src: "https://taira-komori.jpn.org/sound_os2/playing01/pianoE.mp3" ,text: "pianoE"},
+    { id: "A", src: "https://taira-komori.jpn.org/sound_os2/playing01/pianoF.mp3" ,text: "pianoF"},
+    { id: "S", src: "https://taira-komori.jpn.org/sound_os2/playing01/pianoG.mp3" ,text: "pianoG"},
+    { id: "D", src: "https://taira-komori.jpn.org/sound_os2/playing01/pianoA.mp3" ,text: "pianoA"},
+    { id: "Z", src: "https://taira-komori.jpn.org/sound_os2/playing01/pianoB.mp3" ,text: "pianoB"},
+    { id: "X", src: "https://taira-komori.jpn.org/sound_os2/playing01/pianoC2.mp3" ,text: "pianoC2"},
+    { id: "C", src: "https://taira-komori.jpn.org/sound_os2/playing01/TTL_Star.mp3" ,text: "TTL_Star"},
+  ]
 
   return (
     <div id="drum-machine">
-      <div id="display">
-        <button className="drum-pad" id="Q" onClick={() => playAudio("audioQ")}>Q
-          <audio src="https://taira-komori.jpn.org/sound_os2/playing01/pianoC.mp3" className="clip" id="Q"></audio>
-        </button>
-        <button className="drum-pad" id="W" onClick={() => playAudio("audioW")}>W
-          <audio src="https://taira-komori.jpn.org/sound_os2/playing01/pianoD.mp3" className="clip" id="W"></audio>
-        </button>
-        <button className="drum-pad" id="E" onClick={() => playAudio("audioE")}>E
-          <audio src="https://taira-komori.jpn.org/sound_os2/playing01/pianoE.mp3" className="clip" id="E"></audio>
-        </button>
-        <button className="drum-pad" id="A" onClick={() => playAudio("audioA")}>A
-          <audio src="https://taira-komori.jpn.org/sound_os2/playing01/pianoF.mp3" className="clip" id="A"></audio>
-        </button>
-        <button className="drum-pad" id="S" onClick={() => playAudio("audioS")}>S
-          <audio src="https://taira-komori.jpn.org/sound_os2/playing01/pianoG.mp3" className="clip" id="S"></audio>
-        </button>
-        <button className="drum-pad" id="D" onClick={() => playAudio("audioD")}>D
-          <audio src="https://taira-komori.jpn.org/sound_os2/playing01/pianoA.mp3" className="clip" id="D"></audio>
-        </button>
-        <button className="drum-pad" id="Z" onClick={() => playAudio("audioZ")}>Z
-          <audio src="https://taira-komori.jpn.org/sound_os2/playing01/pianoB.mp3" className="clip" id="Z"></audio>
-        </button>
-        <button className="drum-pad" id="X" onClick={() => playAudio("audioX")}>X
-          <audio src="https://taira-komori.jpn.org/sound_os2/playing01/pianoC2.mp3" className="clip" id="X"></audio>
-        </button>
-        <button className="drum-pad" id="C" onClick={() => playAudio("audioC")}>C
-          <audio src="https://taira-komori.jpn.org/sound_os2/playing01/TTL_Star.mp3" className="clip" id="C"></audio>
-        </button>
+      <div id="display" >{Text}
+        {userAudio.map((item) => (
+          <button className="drum-pad" key={item.id} onClick={() => playAudio(item.id, item.text)}>
+            {item.id}
+            <audio src={item.src} className="clip" id={item.id}></audio>
+          </button>
+        ))}
       </div>
     </div>
   )
