@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import './App.scss'
 
 const App = () => {
 
@@ -43,7 +44,8 @@ const App = () => {
 
   return (
     <div id="drum-machine">
-      <div id="display" >{Text}
+      <div className="Text_name">{Text}</div>
+      <div id="display">
         {userAudio.map((item) => (
           <button className="drum-pad" key={item.id} onClick={() => playAudio(item.id, item.text)}>
             {item.id}
